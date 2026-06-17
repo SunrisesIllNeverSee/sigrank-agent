@@ -1,0 +1,59 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sigrank-agent"
+version = "0.1.0"
+description = "SigRank local telemetry agent — scans AI-platform logs, computes the 11-metric stack, publishes signed snapshots."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "CC-BY-NC-4.0" }
+authors = [{ name = "Cheng-I Wu" }]
+keywords = ["sigrank", "telemetry", "leaderboard", "claude", "ai-metrics"]
+classifiers = [
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+]
+
+# Runtime deps. SQLite ships in the stdlib (no driver dependency).
+dependencies = [
+    "typer>=0.12",
+    "pydantic>=2.6",
+    "httpx>=0.27",
+    "rich>=13.7",
+    "pynacl>=1.5",
+    "watchdog>=4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.4",
+    "mypy>=1.9",
+]
+
+[project.urls]
+Homepage = "https://sigrank.io"
+Repository = "https://github.com/sigrank/sigrank-agent"
+
+# The single console entry point. `pipx install sigrank-agent` then `sigrank`.
+[project.scripts]
+sigrank = "sigrank.cli.main:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sigrank"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unused_ignores = true

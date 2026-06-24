@@ -9,7 +9,7 @@ description = "SigRank local telemetry agent — scans AI-platform logs, compute
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "CC-BY-NC-4.0" }
-authors = [{ name = "Cheng-I Wu" }]
+authors = [{ name = "Deric J. McHenry / Ello Cello LLC" }]
 keywords = ["sigrank", "telemetry", "leaderboard", "claude", "ai-metrics"]
 classifiers = [
     "Programming Language :: Python :: 3.11",
@@ -36,8 +36,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://sigrank.io"
-Repository = "https://github.com/sigrank/sigrank-agent"
+Homepage = "https://signalaf.com"
+Repository = "https://github.com/SunrisesIllNeverSee/sigrank-agent"
+"Bug Tracker" = "https://github.com/SunrisesIllNeverSee/sigrank-agent/issues"
 
 # The single console entry point. `pipx install sigrank-agent` then `sigrank`.
 [project.scripts]

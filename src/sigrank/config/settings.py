@@ -19,7 +19,7 @@ from pathlib import Path
 
 # ── Defaults ─────────────────────────────────────────────────────────────────
 
-DEFAULT_SERVER_URL = "https://api.sigrank.io"
+DEFAULT_SERVER_URL = "https://signalaf.com"
 
 # Codename rules (init prompt): 3-32 chars, alphanumeric plus dash/underscore.
 CODENAME_MIN = 3

@@ -580,7 +580,7 @@ def publish() -> None:
         console.print(f"Server response:\n  {json.dumps(body, indent=2)}")
         console.print(
             f"\n[green]✓[/] Published. Visit "
-            f"https://sigrank.io/u/{settings.codename} shortly."
+            f"https://signalaf.com/user/{settings.codename} shortly."
         )
     finally:
         store.close()

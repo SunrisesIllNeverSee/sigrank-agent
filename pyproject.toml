@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "sigrank-agent"
-version = "0.1.0"
+version = "0.1.1"
 description = "SigRank local telemetry agent — scans AI-platform logs, computes the 11-metric stack, publishes signed snapshots."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -40,9 +40,12 @@ Homepage = "https://signalaf.com"
 Repository = "https://github.com/SunrisesIllNeverSee/sigrank-agent"
 "Bug Tracker" = "https://github.com/SunrisesIllNeverSee/sigrank-agent/issues"
 
-# The single console entry point. `pipx install sigrank-agent` then `sigrank`.
+# The single console entry point. `pipx install sigrank-agent` then `sigrank-agent`.
+# (Renamed from `sigrank` 2026-06-26: the bare `sigrank` command now belongs to the
+# MCP TUI front door — the agent vacates the name. PyPI package stays `sigrank-agent`;
+# the Python module stays `sigrank`. Only the console-script command moved.)
 [project.scripts]
-sigrank = "sigrank.cli.main:app"
+sigrank-agent = "sigrank.cli.main:app"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/sigrank"]

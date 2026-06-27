@@ -9,7 +9,7 @@ free tier; the Pro tier (sig_army) runs entirely locally and only ships the
 resulting numeric scores.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 # The scoring ruleset version this agent was built against. Mirrors
 # scoring_formula.md "Rule lock — Ruleset v1.0". The server rejects snapshots

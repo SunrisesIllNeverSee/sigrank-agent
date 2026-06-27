@@ -1,7 +1,7 @@
 """publish/signing.py — ed25519 device keypair + snapshot signing.
 
 The agent identifies itself with a per-device ed25519 keypair generated at
-`sigrank init` and stored in `~/.sigrank/keypair.json`. Snapshots are signed
+`sigrank-agent init` and stored in `~/.sigrank/keypair.json`. Snapshots are signed
 over their *canonical bytes* (snapshots/canonicalize.canonical_bytes), which the
 server recomputes and verifies against `agent.public_key`.
 
@@ -84,7 +84,7 @@ def load_keypair(path: Path) -> dict[str, str]:
     """Load keypair.json. Raises FileNotFoundError if the agent isn't init'd."""
     if not path.exists():
         raise FileNotFoundError(
-            f"No keypair at {path}. Run `sigrank init` first."
+            f"No keypair at {path}. Run `sigrank-agent init` first."
         )
     return json.loads(path.read_text(encoding="utf-8"))
 

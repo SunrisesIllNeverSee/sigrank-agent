@@ -1,7 +1,7 @@
 """config/settings.py — agent configuration + filesystem layout.
 
 The agent stores everything under ~/.sigrank (override with SIGRANK_HOME).
-Configuration is a small JSON document (config.json) that `sigrank init`
+Configuration is a small JSON document (config.json) that `sigrank-agent init`
 writes and the other commands read. The ed25519 keypair lives in keypair.json
 alongside it; the SQLite database in db.sqlite.
 
@@ -146,7 +146,7 @@ class Settings:
         path = config_path(home)
         if not path.exists():
             raise FileNotFoundError(
-                f"No SigRank config at {path}. Run `sigrank init` first."
+                f"No SigRank config at {path}. Run `sigrank-agent init` first."
             )
         data = json.loads(path.read_text(encoding="utf-8"))
         return cls(
@@ -160,7 +160,7 @@ class Settings:
 
 
 def is_initialized(home: Path | None = None) -> bool:
-    """True if `sigrank init` has been run (config + keypair + db present)."""
+    """True if `sigrank-agent init` has been run (config + keypair + db present)."""
     home = home or sigrank_home()
     return (
         config_path(home).exists()

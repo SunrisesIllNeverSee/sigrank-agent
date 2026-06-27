@@ -28,7 +28,7 @@ Requires Python ≥ 3.11. Or install isolated with `pipx` (recommended):
 
 ```bash
 pipx install sigrank-agent
-sigrank version
+sigrank-agent version
 ```
 
 ---
@@ -39,29 +39,29 @@ Five commands from zero to published:
 
 ```bash
 # 1. Initialize — creates ~/.sigrank/ with keypair, database, config
-sigrank init
+sigrank-agent init
 
 # 2. Point at your Claude logs (the default path)
-sigrank source add claude-code ~/.claude/projects
+sigrank-agent source add claude-code ~/.claude/projects
 
 # 3. Scan — reads your logs, loads into local database
-sigrank scan
+sigrank-agent scan
 
 # 4. Compute — runs the metric stack for a window
-sigrank compute --window 30d
+sigrank-agent compute --window 30d
 
 # 5. Preview — inspect what will be published
-sigrank preview
+sigrank-agent preview
 
 # 6. Publish — sign with ed25519 and POST to signalaf.com
-sigrank publish
+sigrank-agent publish
 ```
 
 ---
 
 ## All commands
 
-### `sigrank init`
+### `sigrank-agent init`
 
 Initialize `~/.sigrank/` — keypair, config, database, subfolders. Run once.
 
@@ -73,19 +73,19 @@ Server URL [https://signalaf.com]:
 ✓ Initialized /Users/you/.sigrank
 ✓ Generated device keypair: ed25519:xxxx… (signing OFF by default)
 ✓ Codename: YourCodename
-✓ Ready. Run sigrank source add to point at a data source.
+✓ Ready. Run sigrank-agent source add to point at a data source.
 ```
 
 ---
 
-### `sigrank source`
+### `sigrank-agent source`
 
 Manage which log directories the agent scans.
 
 ```bash
-sigrank source add claude-code ~/.claude/projects   # add Claude Code logs
-sigrank source list                                  # show configured sources
-sigrank source remove claude-code                   # remove a source
+sigrank-agent source add claude-code ~/.claude/projects   # add Claude Code logs
+sigrank-agent source list                                  # show configured sources
+sigrank-agent source remove claude-code                   # remove a source
 ```
 
 **Currently supported source type:** `claude-code` — reads `~/.claude/projects/*/*.jsonl`
@@ -95,14 +95,14 @@ reader and will land in the agent as the platform list expands).
 
 ---
 
-### `sigrank scan`
+### `sigrank-agent scan`
 
 Parse configured sources into the local SQLite database.
 
 ```bash
-sigrank scan                          # scan all sources
-sigrank scan --source claude-code     # scan one source only
-sigrank scan --since 2026-06-01       # only messages on/after this date
+sigrank-agent scan                          # scan all sources
+sigrank-agent scan --source claude-code     # scan one source only
+sigrank-agent scan --since 2026-06-01       # only messages on/after this date
 ```
 
 ```
@@ -113,15 +113,15 @@ Token counts, model IDs, and message timestamps are stored locally. No content i
 
 ---
 
-### `sigrank compute`
+### `sigrank-agent compute`
 
 Run the 11-metric stack over your scanned data for a measurement window.
 
 ```bash
-sigrank compute                       # default: 30d
-sigrank compute --window 7d
-sigrank compute --window 90d
-sigrank compute --window all_time
+sigrank-agent compute                       # default: 30d
+sigrank-agent compute --window 7d
+sigrank-agent compute --window 90d
+sigrank-agent compute --window all_time
 ```
 
 **Windows:** `today` · `7d` · `30d` · `90d` · `all_time`
@@ -145,23 +145,23 @@ sigrank compute --window all_time
 
 ---
 
-### `sigrank preview`
+### `sigrank-agent preview`
 
 Inspect the computed snapshot before publishing. Shows the full payload.
 
 ```bash
-sigrank preview           # formatted display
-sigrank preview --json    # raw JSON payload
+sigrank-agent preview           # formatted display
+sigrank-agent preview --json    # raw JSON payload
 ```
 
 ---
 
-### `sigrank publish`
+### `sigrank-agent publish`
 
 Sign the snapshot with your device keypair (ed25519) and POST it to signalaf.com.
 
 ```bash
-sigrank publish
+sigrank-agent publish
 ```
 
 ```
@@ -177,13 +177,13 @@ the snapshot. Your profile updates within seconds.
 
 ---
 
-### `sigrank history`
+### `sigrank-agent history`
 
 Show your local publish history.
 
 ```bash
-sigrank history           # last 20
-sigrank history --limit 5
+sigrank-agent history           # last 20
+sigrank-agent history --limit 5
 ```
 
 ```
@@ -196,33 +196,33 @@ sigrank history --limit 5
 
 ---
 
-### `sigrank verify`
+### `sigrank-agent verify`
 
 Re-verify the signature and hash of the most recent snapshot.
 
 ```bash
-sigrank verify
+sigrank-agent verify
 ```
 
 ---
 
-### `sigrank config`
+### `sigrank-agent config`
 
 Get or set configuration values.
 
 ```bash
-sigrank config --list                         # show all config
-sigrank config codename                       # get one value
-sigrank config signing_enabled true           # enable ed25519 signing
-sigrank config server_url https://signalaf.com
+sigrank-agent config --list                         # show all config
+sigrank-agent config codename                       # get one value
+sigrank-agent config signing_enabled true           # enable ed25519 signing
+sigrank-agent config server_url https://signalaf.com
 ```
 
 ---
 
-### `sigrank version`
+### `sigrank-agent version`
 
 ```bash
-sigrank version
+sigrank-agent version
 
 sigrank-agent     │ 0.1.0
 schema_version    │ 1.0
@@ -293,8 +293,8 @@ Other env vars: `SIGRANK_SERVER` · `SIGRANK_TIER` · `SIGRANK_LOG_LEVEL` · `SI
 ## Privacy
 
 - **No content, ever.** The agent reads token counts, model IDs, timestamps, and content *lengths* only. Message text never leaves your device.
-- **Local by default.** All data stays in `~/.sigrank/` until you run `sigrank publish`.
-- **You control the keypair.** Signing is off by default. Enable it when you're ready: `sigrank config signing_enabled true`.
+- **Local by default.** All data stays in `~/.sigrank/` until you run `sigrank-agent publish`.
+- **You control the keypair.** Signing is off by default. Enable it when you're ready: `sigrank-agent config signing_enabled true`.
 - **Open source.** The full agent source is at [github.com/SunrisesIllNeverSee/sigrank-agent](https://github.com/SunrisesIllNeverSee/sigrank-agent).
 
 ---

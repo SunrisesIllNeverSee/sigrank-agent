@@ -1,9 +1,11 @@
-"""cli/main.py — the `sigrank` command-line interface.
+"""cli/main.py — the `sigrank-agent` command-line interface.
 
 Wires the agent's compute modules (adapters → parser → store → snapshot builder
 → canonicalize → sign → publish) into the command surface documented in
 cli_commands.md. The Typer `app` defined here is the console entry point
-(`[project.scripts] sigrank = "sigrank.cli.main:app"`).
+(`[project.scripts] sigrank-agent = "sigrank.cli.main:app"`). Renamed from the bare
+`sigrank` command 2026-06-26 — that name now launches the MCP TUI; the module path
+(`sigrank.cli.main`) and the PyPI package (`sigrank-agent`) are unchanged.
 
 Design notes:
   * The CLI is the impure boundary: it reads the wall clock (window anchors,
@@ -88,7 +90,7 @@ def _require_settings() -> cfg.Settings:
     try:
         return cfg.Settings.load(_home())
     except FileNotFoundError:
-        err.print("[red]Not initialized.[/] Run [bold]sigrank init[/] first.")
+        err.print("[red]Not initialized.[/] Run [bold]sigrank-agent init[/] first.")
         raise typer.Exit(EXIT_CONFIG) from None
 
 
@@ -110,7 +112,7 @@ _TRUE = ("1", "true", "yes", "on")
 
 def _signing_on(store: Store) -> bool:
     """Whether to sign snapshots. Env SIGRANK_SIGNING wins; otherwise the
-    persisted `signing_enabled` config (`sigrank config signing_enabled true`).
+    persisted `signing_enabled` config (`sigrank-agent config signing_enabled true`).
     Default OFF — this version submits token telemetry unsigned."""
     env = os.environ.get("SIGRANK_SIGNING")
     if env is not None:
@@ -174,7 +176,7 @@ def init(
         err.print(
             f"[yellow]Signing unavailable[/] ({exc}). Continuing without a keypair — "
             "signing is off by default; enable later with "
-            "[bold]sigrank config signing_enabled true[/]."
+            "[bold]sigrank-agent config signing_enabled true[/]."
         )
     device_id = keypair["device_id"] if keypair else str(uuid.uuid4())
 
@@ -214,14 +216,14 @@ def init(
     if keypair:
         console.print(
             f"[green]✓[/] Generated device keypair: {keypair['public_key'][:32]}… "
-            "(signing OFF by default — enable with `sigrank config signing_enabled true`)"
+            "(signing OFF by default — enable with `sigrank-agent config signing_enabled true`)"
         )
     else:
         console.print("[green]✓[/] Signing OFF — submitting token telemetry unsigned.")
     console.print(f"[green]✓[/] Codename: {codename}")
     console.print(f"[green]✓[/] Server: {server_url}")
     console.print(
-        "[green]✓[/] Ready. Run [bold]sigrank source add[/] to point at a data source."
+        "[green]✓[/] Ready. Run [bold]sigrank-agent source add[/] to point at a data source."
     )
 
 
@@ -269,7 +271,7 @@ def source_add(
         store.add_source(source_id, source_type, str(root), label, _iso(_now()))
     finally:
         store.close()
-    console.print(f"[green]✓[/] Added source [bold]{label}[/]. Run [bold]sigrank scan[/].")
+    console.print(f"[green]✓[/] Added source [bold]{label}[/]. Run [bold]sigrank-agent scan[/].")
 
 
 @source_app.command("list")
@@ -280,7 +282,7 @@ def source_list() -> None:
     try:
         rows = store.list_sources()
         if not rows:
-            console.print("No sources. Add one with [bold]sigrank source add[/].")
+            console.print("No sources. Add one with [bold]sigrank-agent source add[/].")
             return
         table = Table(show_edge=False, pad_edge=False)
         for col in ("NAME", "TYPE", "PATH", "SESSIONS", "LAST SCAN"):
@@ -339,7 +341,7 @@ def scan(
         else:
             sources = store.list_sources()
         if not sources:
-            console.print("No sources. Add one with [bold]sigrank source add[/].")
+            console.print("No sources. Add one with [bold]sigrank-agent source add[/].")
             return
 
         grand_sessions = grand_messages = 0
@@ -377,7 +379,7 @@ def scan(
             )
         console.print(
             f"[green]✓[/] Scan complete — {grand_sessions} session(s), "
-            f"{grand_messages:,} message(s). Run [bold]sigrank compute --window 30d[/]."
+            f"{grand_messages:,} message(s). Run [bold]sigrank-agent compute --window 30d[/]."
         )
     finally:
         store.close()
@@ -476,7 +478,7 @@ def preview(show_json: bool = typer.Option(False, "--json", help="Print raw payl
     finally:
         store.close()
     if row is None:
-        err.print("No snapshot yet. Run [bold]sigrank compute[/] first.")
+        err.print("No snapshot yet. Run [bold]sigrank-agent compute[/] first.")
         raise typer.Exit(EXIT_GENERAL)
     payload = json.loads(row["payload_json"])
     if show_json:
@@ -502,7 +504,7 @@ def preview(show_json: bool = typer.Option(False, "--json", help="Print raw payl
     console.print(f"\nPAYLOAD HASH:  {payload['agent']['snapshot_hash']}")
     console.print(f"RULESET:       {payload['agent']['ruleset_version']}")
     console.print(f"SCHEMA:        {payload['schema_version']}")
-    console.print("\nRun [bold]sigrank publish[/] to transmit.")
+    console.print("\nRun [bold]sigrank-agent publish[/] to transmit.")
 
 
 # ── publish ─────────────────────────────────────────────────────────────────
@@ -518,7 +520,7 @@ def publish() -> None:
     try:
         row = store.latest_snapshot()
         if row is None:
-            err.print("No snapshot to publish. Run [bold]sigrank compute[/] first.")
+            err.print("No snapshot to publish. Run [bold]sigrank-agent compute[/] first.")
             raise typer.Exit(EXIT_GENERAL)
         payload = json.loads(row["payload_json"])
         sid = row["snapshot_id"]
@@ -535,8 +537,8 @@ def publish() -> None:
             except (FileNotFoundError, SigningUnavailable) as exc:
                 err.print(
                     f"[red]Signing is ON but cannot sign:[/] {exc}\n"
-                    "Run [bold]sigrank init[/], or turn it off with "
-                    "[bold]sigrank config signing_enabled false[/]."
+                    "Run [bold]sigrank-agent init[/], or turn it off with "
+                    "[bold]sigrank-agent config signing_enabled false[/]."
                 )
                 raise typer.Exit(EXIT_CONFIG) from exc
             headers["X-Agent-Signature"] = signature
